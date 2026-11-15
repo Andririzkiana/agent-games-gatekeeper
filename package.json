@@ -1,0 +1,1 @@
+{"dependencies":{"snarkjs":"^0.7.5"},"description":"Agent endpoint for zkVerify Agent Games (Proof Gatekeeper). HMAC-signed task envelopes in, signed decisions + Groth16 proofs out.","engines":{"node":">=20"},"name":"agent-games-agent","private":true,"scripts":{"smoke":"node test/smoke.mjs","start":"node src/server.js"},"type":"module","version":"0.1.0"}
