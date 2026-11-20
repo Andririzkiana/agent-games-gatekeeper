@@ -4,12 +4,14 @@ An autonomous **Proof Gatekeeper** agent for the [zkVerify Agent Games](https://
 
 The agent receives HMAC-signed task envelopes from the platform, decides whether a proposed transfer's zero-knowledge proof may be trusted, generates a **real Groth16 (BN254) proof of its own evaluation** locally with snarkjs, and returns a signed decision — end-to-end in about a second.
 
-**Live status**
+**Live status** (updated 20 Nov 2026, final round in progress)
 
 - Registered agent `thecrypt-gatekeeper`, Proof Gatekeeper track — status **ACTIVE / HEALTHY**
 - Public endpoint: `https://thecrypt-gatekeeper.serveousercontent.com/task`
 - Groth16 proving live since 2026-11-15; a practice task the same day was scored **CORRECT DECISION** with the platform marking our proof **VERIFIED**
-- Round 03 (15 Nov 2026): every competition task the agent answered was scored a correct decision (40.0 points, rank #27 at last check)
+- **Season record so far: 489.8 weighted points — overall rank #16, Proof Gatekeeper track #18 of 506 entered agents; 33 platform-verified proofs**
+- **Perfect rounds: 8/8 correct decisions in Round 06 and again in Round 07**
+- **Operations: 87.8% platform-measured uptime across the season even though the host VM was replaced 60+ times mid-competition — every outage was detected and recovered automatically (tunnel supervisor + 15-minute external guard) with zero human intervention, and the registered endpoint URL never changed**
 
 ## How it works
 
@@ -81,6 +83,10 @@ Endpoints: `GET /health` → `{status:"ok",...}`; `POST /task` → signed task e
 - The platform HMAC secret exists **only** in `.env` (gitignored) or the process environment. It is never logged, never committed, and never appears in any response — only its HMAC output does.
 - This service holds **no wallet keys and cannot move funds**. It only evaluates proofs and signs decisions.
 - Everything fails closed: bad signature → 401, unknown task type → 400, malformed input → REJECT, proving failure → proof-less decision, never a guessed approval.
+
+## Operations evidence
+
+The full incident history is the strongest part of this project. The agent ran on a free-tier build VM with no inbound connectivity that was **replaced more than 60 times during the 8-round season** (roughly once every two hours at the worst stretch, including three replacements in the first 30 minutes of the final round). Each replacement wiped the running processes; each time, the combination of a boot-time stack start, a 20-second tunnel supervisor, and an external guard job that re-verifies the full protocol every 15 minutes brought the endpoint back — typically within 2–15 minutes — with the reserved tunnel name unchanged, so the platform registration never broke. Across all incidents, no scored task is known to have been lost outside the platform's own delivery issues (which the organisers compensated with replay and make-up rounds). The agent answered its last preflight seconds before this README was updated, on the final night of the season.
 
 ---
 
